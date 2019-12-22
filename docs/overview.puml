@@ -1,0 +1,78 @@
+@startuml overview
+
+interface Registrable {
+    +bind<R>(): Registrable
+    +bind<C,R>(): Registrable
+    +bind<C,R>(name: string): Registrable
+    +bind(id: Identifier): Registrable
+}
+
+Registrable -- Identifier
+
+abstract class Identifier {
+    +entry: Type
+    +wrap?: Type
+    +name?: string 
+}
+
+hide Identifier methods
+
+interface Producible {
+    +make(): Option<Type>
+}
+
+abstract class ManageableScope {
+    -dependencies: Dependency[0..*]
+    -resolvable: Resolvable
+}
+
+ManageableScope --|> Producible
+ManageableScope --* Resolvable
+hide ManageableScope methods
+
+class SingletonScope {
+    #cached: Lazy<Type>
+}
+
+SingletonScope -left-|> ManageableScope
+hide SingletonScope methods
+
+class TransientScope
+
+TransientScope -right-|> ManageableScope
+hide TransientScope fields
+hide TransientScope methods
+
+abstract class Dependency {
+    +entry: Type
+    +name: string
+}
+
+ManageableScope --* Dependency
+hide Dependency methods
+
+interface Resolvable {
+    +resolve<C>(): Option<C>
+    +resolve<C>(name: string): Option<C>
+}
+
+abstract class Container {
+    #scopes: Map<Identifier, ManageableScope>
+}
+
+Container -up-|> Registrable
+Container -left-|> Resolvable
+Container --* ManageableScope
+hide Container methods
+
+hide interface fields
+
+skinparam defaultFontName Cascadia Code
+
+skinparam class {
+  BackgroundColor White
+  ArrowColor Black
+  BorderColor Gray
+}
+
+@enduml
