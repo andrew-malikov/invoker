@@ -1,8 +1,8 @@
 import 'package:optional/optional.dart';
 
 abstract class Identifier {
-  Type entry;
+  Type get entry;
 
-  Optional<Type> contract;
-  Optional<String> name;
+  Optional<Type> get contract;
+  Optional<String> get tag;
 }

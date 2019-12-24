@@ -1,3 +1,3 @@
 abstract class Dependency {
-  Type entry;
+  Type get entry;
 }

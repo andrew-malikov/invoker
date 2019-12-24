@@ -5,7 +5,7 @@ interface Registrable {
 }
 
 interface BuildableEntry {
-    withTag(name: string): BuildableEntry
+    withTag(tag: string): BuildableEntry
     withContract<C>(): BuildableEntry
     withId(id: Identifier): BuildableEntry
     build(): Registrable
@@ -17,13 +17,13 @@ BuildableEntry -left- Identifier
 abstract class Identifier {
     +entry: Type
     +contract?: Type
-    +name?: string 
+    +tag?: string 
 }
 
 hide Identifier methods
 
 interface Producible {
-    +make(): Option<Type>
+    +make(): Option<Object>
 }
 
 abstract class ManageableScope {
@@ -50,7 +50,7 @@ hide TransientScope methods
 
 abstract class Dependency {
     +entry: Type
-    +name: string
+    +tag: string
 }
 
 ManageableScope --* Dependency
@@ -58,7 +58,7 @@ hide Dependency methods
 
 interface Resolvable {
     +resolve<C>(): Option<C>
-    +resolveByTag<C>(name: string): Option<C>
+    +resolveByTag<C>(tag: string): Option<C>
 }
 
 abstract class Container {
