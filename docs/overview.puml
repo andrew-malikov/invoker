@@ -1,13 +1,18 @@
 @startuml overview
 
 interface Registrable {
-    +bind<R>(): Registrable
-    +bind<C,R>(): Registrable
-    +bind<C,R>(name: string): Registrable
-    +bind(id: Identifier): Registrable
+    +bind<R>(): BuildableEntry
 }
 
-Registrable -- Identifier
+interface BuildableEntry {
+    withTag(name: string): BuildableEntry
+    withContract<C>(): BuildableEntry
+    withId(id: Identifier): BuildableEntry
+    build(): Registrable
+}
+
+Registrable -left- BuildableEntry
+BuildableEntry -left- Identifier
 
 abstract class Identifier {
     +entry: Type
@@ -53,7 +58,7 @@ hide Dependency methods
 
 interface Resolvable {
     +resolve<C>(): Option<C>
-    +resolve<C>(name: string): Option<C>
+    +resolveByTag<C>(name: string): Option<C>
 }
 
 abstract class Container {
