@@ -16,7 +16,7 @@ BuildableEntry -left- Identifier
 
 abstract class Identifier {
     +entry: Type
-    +wrap?: Type
+    +contract?: Type
     +name?: string 
 }
 
