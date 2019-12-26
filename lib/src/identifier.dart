@@ -1,8 +1,8 @@
-import 'package:optional/optional.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class Identifier {
   Type get entry;
 
-  Optional<Type> get contract;
-  Optional<String> get tag;
+  Option<Type> get contract;
+  Option<String> get tag;
 }

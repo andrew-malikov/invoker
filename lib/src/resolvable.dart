@@ -1,6 +1,6 @@
-import 'package:optional/optional.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class Resolvable {
-  Optional<C> resolve<C>();
-  Optional<C> resolveByTag<C>(String tag);
+  Option<C> resolve<C>();
+  Option<C> resolveByTag<C>(String tag);
 }

@@ -1,15 +1,15 @@
 import 'package:Invoker/src/identifier.dart';
-import 'package:optional/optional_internal.dart';
+import 'package:dartz/dartz.dart';
 
 class ImmutableIdentifier implements Identifier {
   @override
-  final Optional<Type> contract;
+  final Option<Type> contract;
 
   @override
   final Type entry;
 
   @override
-  final Optional<String> tag;
+  final Option<String> tag;
 
   ImmutableIdentifier(this.contract, this.entry, this.tag);
 }

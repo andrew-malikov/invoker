@@ -1,5 +1,5 @@
-import 'package:optional/optional.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class Producible {
-  Optional<Object> make();
+  Option<dynamic> make();
 }
