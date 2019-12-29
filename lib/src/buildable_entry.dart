@@ -1,10 +1,15 @@
+import 'package:Invoker/src/container.dart';
 import 'package:Invoker/src/identifier.dart';
-import 'package:Invoker/src/registrable.dart';
+import 'package:Invoker/src/managable_scope.dart';
+import 'package:Invoker/src/resolvable.dart';
 
 abstract class BuildableEntry {
   void withTag(String tag);
   void withContract<C>();
-  void withId(Identifier identifier);
 
-  Registrable build();
+  Container asSingleton();
+  Container asTransient();
 }
+
+typedef BuildScope = ManagableScope Function(Resolve);
+typedef Registrate = Container Function(Identifier, BuildScope);

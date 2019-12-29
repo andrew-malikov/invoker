@@ -11,5 +11,5 @@ class ImmutableIdentifier implements Identifier {
   @override
   final Option<String> tag;
 
-  ImmutableIdentifier(this.contract, this.entry, this.tag);
+  ImmutableIdentifier(this.entry, this.contract, this.tag);
 }

@@ -20,7 +20,8 @@ class InstanceFactory {
       return None();
     }
 
-    return Some(
-        reflectClass(instanceType).newInstance(Symbol.empty, resolvedArgs));
+    return Some(reflectClass(instanceType)
+        .newInstance(Symbol.empty, resolvedArgs)
+        .reflectee);
   }
 }
