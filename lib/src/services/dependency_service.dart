@@ -26,14 +26,14 @@ class DependencyService implements DependencyContainer {
 
   @override
   Option<C> resolve<C>() {
-    // TODO: implement resolve
-    return null;
+    return _resolveByType(C.runtimeType);
   }
 
   @override
   Option<C> resolveByTag<C>(String tag) {
-    // TODO: implement resolveByTag
-    return null;
+    return _scopes
+        .getByTag(C.runtimeType, tag)
+        .flatMap((factoryInstance) => factoryInstance.factory.make());
   }
 
   DependencyContainer _registrate(
