@@ -1,6 +1,6 @@
 import 'package:Invoker/src/dependency_container.dart';
 import 'package:Invoker/src/identifier.dart';
-import 'package:Invoker/src/managable_scope.dart';
+import 'package:Invoker/src/scope_factory.dart';
 import 'package:Invoker/src/resolvable.dart';
 
 abstract class BuildableEntry {
@@ -12,5 +12,5 @@ abstract class BuildableEntry {
   DependencyContainer asTransient();
 }
 
-typedef BuildScope = ManagableScope Function(Resolve);
+typedef BuildScope = ScopeFactory Function(Resolve);
 typedef Registrate = DependencyContainer Function(Identifier, BuildScope);

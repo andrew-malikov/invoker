@@ -1,17 +1,17 @@
 import 'package:Invoker/src/buildable_entry.dart';
 import 'package:Invoker/src/builders/container_entry_builder.dart';
-import 'package:Invoker/src/managable_scope.dart';
+import 'package:Invoker/src/entities/scopes.dart';
 import 'package:Invoker/src/dependency_container.dart';
 import 'package:Invoker/src/identifier.dart';
 
 import 'package:dartz/dartz.dart';
 
 class DependencyService implements DependencyContainer {
-  final Map<Identifier, ManagableScope> _scopes;
+  final Scopes _scopes;
 
   DependencyService(this._scopes);
 
-  DependencyService.empty() : this({});
+  DependencyService.empty() : this(Scopes.empty());
 
   @override
   BuildableEntry bind<R>() {
@@ -49,10 +49,8 @@ class DependencyService implements DependencyContainer {
   }
 
   Option _resolveByType(Type type) {
-    if (!_scopes.containsKey(type)) {
-      return None();
-    }
-
-    return _scopes[type].make();
+    return _scopes
+        .get(type)
+        .map((factoryInstance) => factoryInstance.factory.make());
   }
 }

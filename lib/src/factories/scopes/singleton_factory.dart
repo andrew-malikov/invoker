@@ -1,12 +1,12 @@
 import 'package:Invoker/src/dependency.dart';
 import 'package:Invoker/src/factories/instance_factory.dart';
 import 'package:Invoker/src/identifier.dart';
-import 'package:Invoker/src/managable_scope.dart';
+import 'package:Invoker/src/scope_factory.dart';
 import 'package:Invoker/src/resolvable.dart';
 
 import 'package:dartz/dartz.dart';
 
-class SingletonFactory implements ManagableScope {
+class SingletonFactory implements ScopeFactory {
   final Identifier _identifier;
 
   final List<Dependency> _dependencies;
