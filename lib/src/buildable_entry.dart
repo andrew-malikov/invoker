@@ -5,8 +5,6 @@ import 'package:Invoker/src/resolvable.dart';
 
 abstract class BuildableEntry {
   void withTag(String tag);
-  void withContract<C>();
-  void withContractByType(Type contractType);
 
   DependencyContainer asSingleton();
   DependencyContainer asTransient();

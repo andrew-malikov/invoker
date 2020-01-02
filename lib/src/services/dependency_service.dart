@@ -15,18 +15,13 @@ class DependencyService implements DependencyContainer {
 
   @override
   BuildableEntry bind<R>() {
-    return ContainerEntryBuilder(R.runtimeType, _registrate);
+    return ContainerEntryBuilder(R.runtimeType, None(), _registrate);
   }
 
   @override
-  BuildableEntry bindById(Identifier identifier) {
-    final builder = ContainerEntryBuilder(identifier.entry, _registrate);
-
-    identifier
-      ..contract.fold(none, (contract) => builder.withContractByType(contract))
-      ..tag.fold(none, (tag) => builder.withTag(tag));
-
-    return builder;
+  BuildableEntry bindWithContract<C, R extends C>() {
+    return ContainerEntryBuilder(
+        R.runtimeType, Some(C.runtimeType), _registrate);
   }
 
   @override

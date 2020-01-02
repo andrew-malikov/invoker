@@ -14,21 +14,9 @@ class ContainerEntryBuilder implements BuildableEntry {
 
   Identifier _identifier;
 
-  ContainerEntryBuilder(Type entry, this._registrate) {
+  ContainerEntryBuilder(Type entry, Option<Type> contract, this._registrate) {
     _dependencyResolvable = DependencyResolvableService();
-    _identifier = ImmutableIdentifier(entry, None(), None());
-  }
-
-  @override
-  void withContract<C>() {
-    _identifier = ImmutableIdentifier(
-        _identifier.entry, Some(C.runtimeType), _identifier.tag);
-  }
-
-  @override
-  void withContractByType(Type contractType) {
-    _identifier = ImmutableIdentifier(
-        _identifier.entry, Some(contractType), _identifier.tag);
+    _identifier = ImmutableIdentifier(entry, contract, None());
   }
 
   @override
