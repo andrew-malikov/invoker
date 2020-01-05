@@ -20,7 +20,7 @@ class TransientFactory implements ScopeFactory {
 
   @override
   Option make() {
-    return _instanceFactory.makeByArgs(
-        _identifier.entry, _dependencies.map((dependency) => dependency.entry));
+    return _instanceFactory.makeByArgs(_identifier.entry,
+        _dependencies.map((dependency) => dependency.entry).toList());
   }
 }

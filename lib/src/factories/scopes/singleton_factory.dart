@@ -27,7 +27,7 @@ class SingletonFactory implements ScopeFactory {
       return _resolved;
     }
 
-    return _resolved = _instanceFactory.makeByArgs(
-        _identifier.entry, _dependencies.map((dependency) => dependency.entry));
+    return _resolved = _instanceFactory.makeByArgs(_identifier.entry,
+        _dependencies.map((dependency) => dependency.entry).toList());
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:mirrors';
+
 import 'package:Invoker/src/buildable_entry.dart';
 import 'package:Invoker/src/builders/container_entry_builder.dart';
 import 'package:Invoker/src/entities/scopes.dart';
@@ -15,25 +17,28 @@ class DependencyService implements DependencyContainer {
 
   @override
   BuildableEntry bind<R>() {
-    return ContainerEntryBuilder(R.runtimeType, None(), _registrate);
+    return ContainerEntryBuilder(
+        reflectClass(R).reflectedType, None(), _registrate);
   }
 
   @override
   BuildableEntry bindWithContract<C, R extends C>() {
-    return ContainerEntryBuilder(
-        R.runtimeType, Some(C.runtimeType), _registrate);
+    return ContainerEntryBuilder(reflectClass(R).reflectedType,
+        Some(reflectClass(C).reflectedType), _registrate);
   }
 
   @override
   Option<C> resolve<C>() {
-    return _resolveByType(C.runtimeType);
+    return _resolveByType(reflectClass(C).reflectedType)
+        .map((resolved) => resolved as C);
   }
 
   @override
   Option<C> resolveByTag<C>(String tag) {
     return _scopes
-        .getByTag(C.runtimeType, tag)
-        .flatMap((factoryInstance) => factoryInstance.factory.make());
+        .getByTag(reflectClass(C).reflectedType, tag)
+        .flatMap((factoryInstance) => factoryInstance.factory.make())
+        .map((resolved) => resolved as C);
   }
 
   DependencyContainer _registrate(
@@ -46,6 +51,6 @@ class DependencyService implements DependencyContainer {
   Option _resolveByType(Type type) {
     return _scopes
         .get(type)
-        .map((factoryInstance) => factoryInstance.factory.make());
+        .flatMap((factoryInstance) => factoryInstance.factory.make());
   }
 }
