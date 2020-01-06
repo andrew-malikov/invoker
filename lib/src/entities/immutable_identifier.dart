@@ -1,6 +1,6 @@
-import 'package:Invoker/src/identifier.dart';
-
 import 'package:dartz/dartz.dart';
+
+import 'package:Invoker/src/identifier.dart';
 
 class ImmutableIdentifier implements Identifier {
   @override

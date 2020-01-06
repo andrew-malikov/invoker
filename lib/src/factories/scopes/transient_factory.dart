@@ -1,10 +1,10 @@
+import 'package:dartz/dartz.dart';
+
 import 'package:Invoker/src/dependency.dart';
 import 'package:Invoker/src/factories/instance_factory.dart';
 import 'package:Invoker/src/identifier.dart';
 import 'package:Invoker/src/scope_factory.dart';
 import 'package:Invoker/src/resolvable.dart';
-
-import 'package:dartz/dartz.dart';
 
 class TransientFactory implements ScopeFactory {
   final Identifier _identifier;

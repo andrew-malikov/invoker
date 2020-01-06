@@ -3,9 +3,9 @@ import 'dart:mirrors';
 import 'package:Invoker/src/dependency.dart';
 import 'package:Invoker/src/entities/immutable_dependency.dart';
 
-class DependencyResolvableService {
-  List<Dependency> resolve(Type type) {
-    final constructors = reflectClass(type)
+extension ConstructorsService on Type {
+  List<Dependency> getArgs() {
+    final constructors = reflectClass(this)
         .declarations
         .values
         .whereType<MethodMirror>()

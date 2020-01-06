@@ -1,4 +1,4 @@
-import 'dart:mirrors';
+import 'package:dartz/dartz.dart';
 
 import 'package:Invoker/src/buildable_entry.dart';
 import 'package:Invoker/src/builders/container_entry_builder.dart';
@@ -6,7 +6,7 @@ import 'package:Invoker/src/entities/scopes.dart';
 import 'package:Invoker/src/dependency_container.dart';
 import 'package:Invoker/src/identifier.dart';
 
-import 'package:dartz/dartz.dart';
+import 'package:Invoker/src/services/metadata/objects_service.dart';
 
 class DependencyService implements DependencyContainer {
   final Scopes _scopes;
@@ -17,26 +17,25 @@ class DependencyService implements DependencyContainer {
 
   @override
   BuildableEntry bind<R>() {
-    return ContainerEntryBuilder(
-        reflectClass(R).reflectedType, None(), _registrate);
+    return ContainerEntryBuilder(R.getReflectedType(), None(), _registrate);
   }
 
   @override
   BuildableEntry bindWithContract<C, R extends C>() {
-    return ContainerEntryBuilder(reflectClass(R).reflectedType,
-        Some(reflectClass(C).reflectedType), _registrate);
+    return ContainerEntryBuilder(
+        R.getReflectedType(), Some(C.getReflectedType()), _registrate);
   }
 
   @override
   Option<C> resolve<C>() {
-    return _resolveByType(reflectClass(C).reflectedType)
+    return _resolveByType(C.getReflectedType())
         .map((resolved) => resolved as C);
   }
 
   @override
   Option<C> resolveByTag<C>(String tag) {
     return _scopes
-        .getByTag(reflectClass(C).reflectedType, tag)
+        .getByTag(C.getReflectedType(), tag)
         .flatMap((factoryInstance) => factoryInstance.factory.make())
         .map((resolved) => resolved as C);
   }

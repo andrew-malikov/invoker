@@ -4,7 +4,7 @@ version: 0.1.0
 author: markupcode <andrew.devels@gmail.com>
 
 environment:
-  sdk: '>=2.5.0 <3.0.0'
+  sdk: '>=2.6.0 <3.0.0'
 
 dependencies:
   dartz: ^0.8.9

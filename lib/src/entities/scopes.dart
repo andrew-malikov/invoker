@@ -1,14 +1,13 @@
+import 'package:dartz/dartz.dart';
+
 import 'package:Invoker/src/identifier.dart';
 import 'package:Invoker/src/scope_factory.dart';
-import 'package:Invoker/src/services/types_service.dart';
 
-import 'package:dartz/dartz.dart';
+import 'package:Invoker/src/services/metadata/types_service.dart';
 
 class Scopes {
   // TODO: describe structure of the map
   final Map<Type, List<InstanceFactory>> _factories;
-
-  final TypesService _typesService = TypesService();
 
   Scopes(this._factories);
 
@@ -43,9 +42,8 @@ class Scopes {
   }
 
   bool containsKey(Type contract, Option<String> tag) {
-    var bucketKey = _factories.keys.where((factoryContract) =>
-        factoryContract == contract ||
-        _typesService.isSubtype(contract, factoryContract));
+    var bucketKey = _factories.keys
+        .where((factoryContract) => factoryContract.isInHierarchy(contract));
 
     if (bucketKey.isEmpty) {
       return false;
@@ -59,9 +57,8 @@ class Scopes {
   }
 
   Option<InstanceFactory> get(Type contract) {
-    var bucketKey = _factories.keys.where((factoryContract) =>
-        factoryContract == contract ||
-        _typesService.isSubtype(contract, factoryContract));
+    var bucketKey = _factories.keys
+        .where((factoryContract) => factoryContract.isInHierarchy(contract));
 
     if (bucketKey.isEmpty) {
       return None();
@@ -72,9 +69,8 @@ class Scopes {
   }
 
   Option<InstanceFactory> getByTag(Type contract, String tag) {
-    var bucketKey = _factories.keys.where((factoryContract) =>
-        factoryContract == contract ||
-        _typesService.isSubtype(contract, factoryContract));
+    var bucketKey = _factories.keys
+        .where((factoryContract) => factoryContract.isInHierarchy(contract));
 
     if (bucketKey.isEmpty) {
       return None();
@@ -94,9 +90,8 @@ class Scopes {
   }
 
   List<InstanceFactory> getMany(Type contract) {
-    var bucketKey = _factories.keys.where((factoryContract) =>
-        factoryContract == contract ||
-        _typesService.isSubtype(contract, factoryContract));
+    var bucketKey = _factories.keys
+        .where((factoryContract) => factoryContract.isInHierarchy(contract));
 
     if (bucketKey.isEmpty) {
       return [];
