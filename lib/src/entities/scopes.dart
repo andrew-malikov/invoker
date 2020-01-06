@@ -1,13 +1,15 @@
 import 'package:dartz/dartz.dart';
 
 import 'package:Invoker/src/identifier.dart';
+import 'package:Invoker/src/failure.dart';
+import 'package:Invoker/src/entities/failures/contract_failure.dart';
 import 'package:Invoker/src/scope_factory.dart';
 
 import 'package:Invoker/src/services/metadata/types_service.dart';
 
 class Scopes {
   // TODO: describe structure of the map
-  final Map<Type, List<InstanceFactory>> _factories;
+  final Map<Type, List<InitializedFactory>> _factories;
 
   Scopes(this._factories);
 
@@ -18,7 +20,7 @@ class Scopes {
 
     if (!_factories.containsKey(contract)) {
       _factories.putIfAbsent(
-          contract, () => [InstanceFactory.from(identifier, getScope())]);
+          contract, () => [InitializedFactory.from(identifier, getScope())]);
 
       return;
     }
@@ -38,7 +40,7 @@ class Scopes {
       return;
     }
 
-    bucket.add(InstanceFactory.from(identifier, getScope()));
+    bucket.add(InitializedFactory.from(identifier, getScope()));
   }
 
   bool containsKey(Type contract, Option<String> tag) {
@@ -56,24 +58,27 @@ class Scopes {
     }).getOrElse(() => true);
   }
 
-  Option<InstanceFactory> get(Type contract) {
+  Either<InitializedFactory, Failure> get(Type contract) {
     var bucketKey = _factories.keys
         .where((factoryContract) => factoryContract.isInHierarchy(contract));
 
     if (bucketKey.isEmpty) {
-      return None();
+      return Right(ContractFailure.Mismatch(contract));
     }
 
-    // TODO: return either with error if there are many realizations
-    return Some(_factories[bucketKey.first].first);
+    if (bucketKey.length > 1 || _factories[bucketKey.first].length > 1) {
+      return Right(ContractFailure.MulpipleImplementation(contract));
+    }
+
+    return Left(_factories[bucketKey.first].first);
   }
 
-  Option<InstanceFactory> getByTag(Type contract, String tag) {
+  Either<InitializedFactory, Failure> getByTag(Type contract, String tag) {
     var bucketKey = _factories.keys
         .where((factoryContract) => factoryContract.isInHierarchy(contract));
 
     if (bucketKey.isEmpty) {
-      return None();
+      return Right(ContractFailure.Mismatch(contract));
     }
 
     var matchedFactories = _factories[bucketKey.first].where((factory) =>
@@ -82,14 +87,13 @@ class Scopes {
             .getOrElse(() => false));
 
     if (matchedFactories.isEmpty) {
-      return None();
+      return Right(ContractFailure.MismatchByTag(contract, tag));
     }
 
-    // TODO: return either with error if there many are realizations
-    return Some(matchedFactories.first);
+    return Left(matchedFactories.first);
   }
 
-  List<InstanceFactory> getMany(Type contract) {
+  List<InitializedFactory> getMany(Type contract) {
     var bucketKey = _factories.keys
         .where((factoryContract) => factoryContract.isInHierarchy(contract));
 
@@ -101,13 +105,13 @@ class Scopes {
   }
 }
 
-class InstanceFactory {
+class InitializedFactory {
   final Type entry;
   final Option<String> tag;
   final ScopeFactory factory;
 
-  InstanceFactory(this.entry, this.tag, this.factory);
+  InitializedFactory(this.entry, this.tag, this.factory);
 
-  InstanceFactory.from(Identifier identifier, ScopeFactory factory)
+  InitializedFactory.from(Identifier identifier, ScopeFactory factory)
       : this(identifier.entry, identifier.tag, factory);
 }

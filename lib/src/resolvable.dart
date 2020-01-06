@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 
+import 'package:Invoker/src/failure.dart';
+
 abstract class Resolvable {
-  Option<C> resolve<C>();
-  Option<C> resolveByTag<C>(String tag);
+  Either<C, Failure> resolve<C>();
+  Either<C, Failure> resolveByTag<C>(String tag);
 }
 
-typedef Resolve = Option Function(Type);
+typedef Resolve = Either<dynamic, Failure> Function(Type);

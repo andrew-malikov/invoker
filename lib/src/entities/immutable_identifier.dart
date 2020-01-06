@@ -12,7 +12,9 @@ class ImmutableIdentifier implements Identifier {
   @override
   final Option<String> tag;
 
-  ImmutableIdentifier(this.entry, this.contract, this.tag);
+  ImmutableIdentifier(this.entry, [Option<Type> contract, Option<String> tag])
+      : contract = contract ?? None(),
+        tag = tag ?? None();
 
   @override
   int get hashCode {

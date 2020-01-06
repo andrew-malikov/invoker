@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 
+import 'package:Invoker/src/failure.dart';
+
 abstract class Producible {
-  Option make();
+  Either<dynamic, Failure> make();
 }

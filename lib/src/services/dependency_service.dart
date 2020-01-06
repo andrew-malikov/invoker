@@ -5,8 +5,10 @@ import 'package:Invoker/src/builders/container_entry_builder.dart';
 import 'package:Invoker/src/entities/scopes.dart';
 import 'package:Invoker/src/dependency_container.dart';
 import 'package:Invoker/src/identifier.dart';
+import 'package:Invoker/src/failure.dart';
 
 import 'package:Invoker/src/services/metadata/objects_service.dart';
+import 'package:Invoker/src/services/failure_service.dart';
 
 class DependencyService implements DependencyContainer {
   final Scopes _scopes;
@@ -17,27 +19,28 @@ class DependencyService implements DependencyContainer {
 
   @override
   BuildableEntry bind<R>() {
-    return ContainerEntryBuilder(R.getReflectedType(), None(), _registrate);
+    return ContainerEntryBuilder(R.getReflectedType(), _registrate);
   }
 
   @override
   BuildableEntry bindWithContract<C, R extends C>() {
     return ContainerEntryBuilder(
-        R.getReflectedType(), Some(C.getReflectedType()), _registrate);
+        R.getReflectedType(), _registrate, Some(C.getReflectedType()));
   }
 
   @override
-  Option<C> resolve<C>() {
+  Either<C, Failure> resolve<C>() {
     return _resolveByType(C.getReflectedType())
-        .map((resolved) => resolved as C);
+        .leftMap((resolved) => resolved as C);
   }
 
   @override
-  Option<C> resolveByTag<C>(String tag) {
+  Either<C, Failure> resolveByTag<C>(String tag) {
     return _scopes
         .getByTag(C.getReflectedType(), tag)
-        .flatMap((factoryInstance) => factoryInstance.factory.make())
-        .map((resolved) => resolved as C);
+        .leftMap((initializedFactory) => initializedFactory.factory.make())
+        .flatMapWithFailure()
+        .leftMap((resolved) => resolved as C);
   }
 
   DependencyContainer _registrate(
@@ -47,9 +50,10 @@ class DependencyService implements DependencyContainer {
     return this;
   }
 
-  Option _resolveByType(Type type) {
+  Either<dynamic, Failure> _resolveByType(Type type) {
     return _scopes
         .get(type)
-        .flatMap((factoryInstance) => factoryInstance.factory.make());
+        .leftMap((initializedFactory) => initializedFactory.factory.make())
+        .flatMapWithFailure();
   }
 }

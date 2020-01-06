@@ -11,16 +11,16 @@ void main() {
         .bindWithContract<Warrior, Ninja>()
         .asTransient();
 
-    expect(container.resolve<Warrior>().isSome(), equals(true));
+    expect(container.resolve<Warrior>().isLeft(), equals(true));
   });
 
-  test('Container.resolve<Warrior>() return None', () {
+  test('Container.resolve<Warrior>() return Failure', () {
     final container = ContainerFactory()
         .empty()
         .bindWithContract<Warrior, Ninja>()
         .asTransient();
 
-    expect(container.resolve<Warrior>().isNone(), equals(true));
+    expect(container.resolve<Warrior>().isRight(), equals(true));
   });
 }
 

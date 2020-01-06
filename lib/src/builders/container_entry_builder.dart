@@ -14,8 +14,8 @@ class ContainerEntryBuilder implements BuildableEntry {
 
   Identifier _identifier;
 
-  ContainerEntryBuilder(Type entry, Option<Type> contract, this._registrate) {
-    _identifier = ImmutableIdentifier(entry, contract, None());
+  ContainerEntryBuilder(Type entry, this._registrate, [Option<Type> contract]) {
+    _identifier = ImmutableIdentifier(entry, contract ?? None(), None());
   }
 
   @override

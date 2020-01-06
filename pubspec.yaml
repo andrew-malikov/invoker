@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   dartz: ^0.8.9
+  sprintf: ^4.0.2
 
 dev_dependencies:
   pedantic: ^1.8.0

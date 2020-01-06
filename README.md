@@ -10,8 +10,21 @@ Has strict dependency on [Dartz](https://github.com/spebbe/dartz)!
 
 ## API Draft
 
-### Factory
+### Empty container
 
 ```dart
-final contianer = Containers.empty();
+final contianer = ContainerFactory.empty();
+```
+
+### Dependency registration
+
+```dart
+container.bindWithContract<Weapon, Katana>().asTransient()
+         .bindWithContract<Warrior, Ninja>().asTransient();
+```
+
+### Dependency resolving
+
+```dart
+final warrior = container.resolve<Warrior>();
 ```
