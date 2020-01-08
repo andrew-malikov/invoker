@@ -3,7 +3,7 @@ import 'package:Invoker/src/identifier.dart';
 import 'package:Invoker/src/producible.dart';
 import 'package:Invoker/src/resolvable.dart';
 
-abstract class ScopeFactory implements Producible {
+abstract class ScopeFactory<T> implements Producible<T> {
   final Identifier _identifier;
 
   final List<Dependency> _dependencies;

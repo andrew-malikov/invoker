@@ -7,7 +7,7 @@ import 'package:Invoker/src/identifier.dart';
 import 'package:Invoker/src/scope_factory.dart';
 import 'package:Invoker/src/resolvable.dart';
 
-class TransientFactory implements ScopeFactory {
+class TransientFactory<T> implements ScopeFactory<T> {
   final Identifier _identifier;
 
   final List<Dependency> _dependencies;
@@ -20,8 +20,8 @@ class TransientFactory implements ScopeFactory {
   }
 
   @override
-  Either<dynamic, Failure> make() {
-    return _objectsFactory.makeByArgs(_identifier.entry,
+  Either<T, Failure> make() {
+    return _objectsFactory.makeByArgs<T>(_identifier.entry,
         _dependencies.map((dependency) => dependency.entry).toList());
   }
 }

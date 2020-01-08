@@ -1,34 +1,23 @@
 import 'package:dartz/dartz.dart';
 
-import 'package:Invoker/src/dependency.dart';
+import 'package:Invoker/src/producible.dart';
 import 'package:Invoker/src/failure.dart';
-import 'package:Invoker/src/factories/objects_factory.dart';
-import 'package:Invoker/src/identifier.dart';
-import 'package:Invoker/src/scope_factory.dart';
-import 'package:Invoker/src/resolvable.dart';
 
-class SingletonFactory implements ScopeFactory {
-  final Identifier _identifier;
+class SingletonFactory<T> implements Producible<T> {
+  final Producible<T> _producible;
 
-  final List<Dependency> _dependencies;
-  final Resolve _resolve;
+  Option<Either<T, Failure>> _cached;
 
-  ObjectsFactory _objectsFactory;
-
-  Option _cached;
-
-  SingletonFactory(this._identifier, this._dependencies, this._resolve) {
-    _objectsFactory = ObjectsFactory(_resolve);
+  SingletonFactory(this._producible) {
     _cached = None();
   }
 
   @override
-  Either<dynamic, Failure> make() {
+  Either<T, Failure> make() {
     var resolved;
 
     _cached.fold(() {
-      resolved = _objectsFactory.makeByArgs(_identifier.entry,
-          _dependencies.map((dependency) => dependency.entry).toList());
+      resolved = _producible.make();
 
       _cached = Some(resolved);
     }, (exist) => resolved = exist);

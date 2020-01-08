@@ -8,7 +8,7 @@ class ContractFailure extends Failure {
       "Can't match contract of %0s with registered dependencies";
   static final String _mismatchByTagTemplate =
       "Can't match contract of %0s by tag %1s with registered dependencies";
-  static final String _multipleImplementationTemplate =
+  static final String _multipleImplementationsTemplate =
       'Found multiple contract implementations of %0s';
 
   final Type contract;
@@ -27,8 +27,8 @@ class ContractFailure extends Failure {
       : this(contract, sprintf(_mismatchByTagTemplate, [contract, tag]), None(),
             Some(tag));
 
-  ContractFailure.MulpipleImplementation(Type contract,
+  ContractFailure.MulpipleImplementations(Type contract,
       [Option<Failure> related])
-      : this(contract, sprintf(_multipleImplementationTemplate, [contract]),
+      : this(contract, sprintf(_multipleImplementationsTemplate, [contract]),
             related);
 }

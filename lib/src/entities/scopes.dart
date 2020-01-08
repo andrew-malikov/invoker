@@ -1,9 +1,9 @@
+import 'package:Invoker/src/producible.dart';
 import 'package:dartz/dartz.dart';
 
 import 'package:Invoker/src/identifier.dart';
 import 'package:Invoker/src/failure.dart';
 import 'package:Invoker/src/entities/failures/contract_failure.dart';
-import 'package:Invoker/src/scope_factory.dart';
 
 import 'package:Invoker/src/services/metadata/types_service.dart';
 
@@ -15,12 +15,13 @@ class Scopes {
 
   Scopes.empty() : this({});
 
-  void putIfAbsent(Identifier identifier, ScopeFactory Function() getScope) {
+  void putIfAbsent<T>(
+      Identifier identifier, Producible<T> Function() getFactory) {
     var contract = identifier.contract.getOrElse(() => identifier.entry);
 
     if (!_factories.containsKey(contract)) {
-      _factories.putIfAbsent(
-          contract, () => [InitializedFactory.from(identifier, getScope())]);
+      _factories.putIfAbsent(contract,
+          () => [InitializedFactory<T>.from(identifier, getFactory())]);
 
       return;
     }
@@ -40,7 +41,7 @@ class Scopes {
       return;
     }
 
-    bucket.add(InitializedFactory.from(identifier, getScope()));
+    bucket.add(InitializedFactory<T>.from(identifier, getFactory()));
   }
 
   bool containsKey(Type contract, Option<String> tag) {
@@ -67,7 +68,7 @@ class Scopes {
     }
 
     if (bucketKey.length > 1 || _factories[bucketKey.first].length > 1) {
-      return Right(ContractFailure.MulpipleImplementation(contract));
+      return Right(ContractFailure.MulpipleImplementations(contract));
     }
 
     return Left(_factories[bucketKey.first].first);
@@ -105,13 +106,13 @@ class Scopes {
   }
 }
 
-class InitializedFactory {
+class InitializedFactory<T> {
   final Type entry;
   final Option<String> tag;
-  final ScopeFactory factory;
+  final Producible<T> factory;
 
   InitializedFactory(this.entry, this.tag, this.factory);
 
-  InitializedFactory.from(Identifier identifier, ScopeFactory factory)
+  InitializedFactory.from(Identifier identifier, Producible<T> factory)
       : this(identifier.entry, identifier.tag, factory);
 }

@@ -11,7 +11,7 @@ class ObjectsFactory {
 
   ObjectsFactory(this._provideArg);
 
-  Either<dynamic, Failure> makeByArgs(
+  Either<T, Failure> makeByArgs<T>(
       Type instanceType, List<Type> argsDeclarations) {
     final resolvedDependencies = [];
 
@@ -19,7 +19,7 @@ class ObjectsFactory {
       final resolvedDependency = _provideArg(argDeclaration);
 
       if (resolvedDependency.isRight()) {
-        return resolvedDependency;
+        return Right((resolvedDependency as Right).value);
       }
 
       resolvedDependency.fold(
@@ -28,6 +28,6 @@ class ObjectsFactory {
 
     return Left(reflectClass(instanceType)
         .newInstance(Symbol.empty, resolvedDependencies)
-        .reflectee);
+        .reflectee as T);
   }
 }

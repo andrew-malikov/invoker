@@ -19,13 +19,13 @@ class DependencyService implements DependencyContainer {
 
   @override
   BuildableEntry bind<R>() {
-    return ContainerEntryBuilder(R.getReflectedType(), _registrate);
+    return ContainerEntryBuilder<R>(_registrate, this);
   }
 
   @override
   BuildableEntry bindWithContract<C, R extends C>() {
-    return ContainerEntryBuilder(
-        R.getReflectedType(), _registrate, Some(C.getReflectedType()));
+    return ContainerEntryBuilder<R>(
+        _registrate, this, Some(C.getReflectedType()));
   }
 
   @override
